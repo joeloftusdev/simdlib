@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <immintrin.h>  // SSE, AVX intrinsics
 #ifdef __ARM_NEON
 #include <arm_neon.h>    // NEON intrinsics (on ARM)
@@ -20,8 +21,8 @@ struct simd_vector<float, 4> {
     explicit simd_vector(__m128 vec) : data(vec) {}
 
     float operator[](size_t i) const {
-        alignas(16) float elements[4];
-        _mm_store_ps(elements, data);
+        alignas(16) std::array<float, 4> elements;
+        _mm_store_ps(elements.data(), data);
         return elements[i];
     }
 
@@ -72,8 +73,8 @@ struct simd_vector<float, 8> {
     explicit simd_vector(__m256 vec) : data(vec) {}
 
     float operator[](size_t i) const {
-        alignas(32) float elements[8];
-        _mm256_store_ps(elements, data);
+        alignas(32) std::array<float, 8> elements;
+        _mm256_store_ps(elements.data(), data);
         return elements[i];
     }
 
@@ -125,8 +126,8 @@ struct simd_vector<float, 4> {
     explicit simd_vector(float32x4_t vec) : data(vec) {}
 
     float operator[](size_t i) const {
-        float elements[4];
-        vst1q_f32(elements, data);
+        std::array<float, 4> elements;
+        vst1q_f32(elements.data(), data);
         return elements[i];
     }
 
@@ -170,7 +171,7 @@ struct simd_vector<float, 4> {
 
 // factory function to create a SIMD vector from a scalar value
 template <typename T, size_t N>
-simd_vector<T, N> make_vector(T value) {
+constexpr simd_vector<T, N> make_vector(T value) {
     return simd_vector<T, N>(value);
 }
 
