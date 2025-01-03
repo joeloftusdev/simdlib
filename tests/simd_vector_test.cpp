@@ -62,7 +62,6 @@ TEST(SimdVectorTest, Multiplication) {
     simd_vector<float, 4> vec2(3.0f);
     auto result = vec1 * vec2;
 
-
     for (size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(result[i], 6.0f);
     }
@@ -95,6 +94,78 @@ TEST(SimdVectorTest, DivisionInPlace) {
 
     for (size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(vec1[i], 3.0f);
+    }
+}
+
+TEST(SimdVectorTest, Equality) {
+    simd_vector<float, 4> vec1(1.0f);
+    simd_vector<float, 4> vec2(1.0f);
+    auto result = vec1 == vec2;
+
+    for (size_t i = 0; i < 4; ++i) {
+        float temp = result[i];
+        uint32_t mask = reinterpret_cast<const uint32_t&>(temp);
+        EXPECT_EQ(mask, 0xFFFFFFFF); //0xFFFFFFFF = true
+    }
+}
+
+TEST(SimdVectorTest, Inequality) {
+    simd_vector<float, 4> vec1(1.0f);
+    simd_vector<float, 4> vec2(2.0f);
+    auto result = vec1 != vec2;
+
+    for (size_t i = 0; i < 4; ++i) {
+        float temp = result[i];
+        uint32_t mask = reinterpret_cast<const uint32_t&>(temp);
+        EXPECT_EQ(mask, 0xFFFFFFFF);
+    }
+}
+
+TEST(SimdVectorTest, LessThan) {
+    simd_vector<float, 4> vec1(1.0f);
+    simd_vector<float, 4> vec2(2.0f);
+    auto result = vec1 < vec2;
+
+    for (size_t i = 0; i < 4; ++i) {
+        float temp = result[i];
+        uint32_t mask = reinterpret_cast<const uint32_t&>(temp);
+        EXPECT_EQ(mask, 0xFFFFFFFF);
+    }
+}
+
+TEST(SimdVectorTest, LessThanOrEqual) {
+    simd_vector<float, 4> vec1(1.0f);
+    simd_vector<float, 4> vec2(1.0f);
+    auto result = vec1 <= vec2;
+
+    for (size_t i = 0; i < 4; ++i) {
+        float temp = result[i];
+        uint32_t mask = reinterpret_cast<const uint32_t&>(temp);
+        EXPECT_EQ(mask, 0xFFFFFFFF);
+    }
+}
+
+TEST(SimdVectorTest, GreaterThan) {
+    simd_vector<float, 4> vec1(2.0f);
+    simd_vector<float, 4> vec2(1.0f);
+    auto result = vec1 > vec2;
+
+    for (size_t i = 0; i < 4; ++i) {
+        float temp = result[i];
+        uint32_t mask = reinterpret_cast<const uint32_t&>(temp);
+        EXPECT_EQ(mask, 0xFFFFFFFF);
+    }
+}
+
+TEST(SimdVectorTest, GreaterThanOrEqual) {
+    simd_vector<float, 4> vec1(1.0f);
+    simd_vector<float, 4> vec2(1.0f);
+    auto result = vec1 >= vec2;
+
+    for (size_t i = 0; i < 4; ++i) {
+        float temp = result[i];
+        uint32_t mask = reinterpret_cast<const uint32_t&>(temp);
+        EXPECT_EQ(mask, 0xFFFFFFFF);
     }
 }
 

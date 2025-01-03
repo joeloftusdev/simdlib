@@ -74,6 +74,30 @@ struct simd_vector<float, 4> {
     simd_vector operator/(const simd_vector& other) const {
         return simd_vector(_mm_div_ps(data, other.data));
     }
+
+    simd_vector operator==(const simd_vector& other) const { 
+        return simd_vector(_mm_cmpeq_ps(data, other.data));
+    }
+
+    simd_vector operator!=(const simd_vector& other) const { 
+        return simd_vector(_mm_cmpneq_ps(data, other.data));
+    }
+
+    simd_vector operator<(const simd_vector& other) const { 
+        return simd_vector(_mm_cmplt_ps(data, other.data));
+    }
+
+    simd_vector operator<=(const simd_vector& other) const { 
+        return simd_vector(_mm_cmple_ps(data, other.data));
+    }
+
+    simd_vector operator>(const simd_vector& other) const { 
+        return simd_vector(_mm_cmpgt_ps(data, other.data));
+    }
+
+    simd_vector operator>=(const simd_vector& other) const { 
+        return simd_vector(_mm_cmpge_ps(data, other.data));
+    }
 };
 
 // AVX (8 floats)
@@ -128,6 +152,30 @@ struct simd_vector<float, 8> {
 
     simd_vector operator/(const simd_vector& other) const {
         return simd_vector(_mm256_div_ps(data, other.data));
+    }
+
+    simd_vector operator==(const simd_vector& other) const { 
+        return simd_vector(_mm256_cmp_ps(data, other.data, _CMP_EQ_OQ));
+    }
+
+    simd_vector operator!=(const simd_vector& other) const { 
+        return simd_vector(_mm256_cmp_ps(data, other.data, _CMP_NEQ_OQ));
+    }
+
+    simd_vector operator<(const simd_vector& other) const {
+        return simd_vector(_mm256_cmp_ps(data, other.data, _CMP_LT_OQ));
+    }
+
+    simd_vector operator<=(const simd_vector& other) const { 
+        return simd_vector(_mm256_cmp_ps(data, other.data, _CMP_LE_OQ));
+    }
+
+    simd_vector operator>(const simd_vector& other) const { 
+        return simd_vector(_mm256_cmp_ps(data, other.data, _CMP_GT_OQ));
+    }
+
+    simd_vector operator>=(const simd_vector& other) const { 
+        return simd_vector(_mm256_cmp_ps(data, other.data, _CMP_GE_OQ));
     }
 };
 
@@ -184,6 +232,30 @@ struct simd_vector<float, 4> {
 
     simd_vector operator/(const simd_vector& other) const {
         return simd_vector(vdivq_f32(data, other.data));
+    }
+
+    simd_vector operator==(const simd_vector& other) const { // Added
+        return simd_vector(vceqq_f32(data, other.data));
+    }
+
+    simd_vector operator!=(const simd_vector& other) const { 
+        return simd_vector(vmvnq_u32(vceqq_f32(data, other.data)));
+    }
+
+    simd_vector operator<(const simd_vector& other) const { 
+        return simd_vector(vcltq_f32(data, other.data));
+    }
+
+    simd_vector operator<=(const simd_vector& other) const { 
+        return simd_vector(vcleq_f32(data, other.data));
+    }
+
+    simd_vector operator>(const simd_vector& other) const { 
+        return simd_vector(vcgtq_f32(data, other.data));
+    }
+
+    simd_vector operator>=(const simd_vector& other) const { 
+        return simd_vector(vcgeq_f32(data, other.data));
     }
 };
 #endif
