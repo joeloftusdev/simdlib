@@ -1,8 +1,8 @@
 #pragma once
 
-#include <immintrin.h>  //SSE, AVX intrinsics
+#include <immintrin.h>  // SSE, AVX intrinsics
 #ifdef __ARM_NEON
-#include <arm_neon.h>    //NEON intrinsics (on ARM)
+#include <arm_neon.h>    // NEON intrinsics (on ARM)
 #endif
 
 namespace simdlib {
@@ -10,7 +10,7 @@ namespace simdlib {
 template <typename T, size_t N>
 struct simd_vector;
 
-//SSE(4 floats)
+// SSE (4 floats)
 template <>
 struct simd_vector<float, 4> {
     __m128 data;  // SSE register
@@ -33,12 +33,39 @@ struct simd_vector<float, 4> {
     simd_vector operator+(const simd_vector& other) const {
         return simd_vector(_mm_add_ps(data, other.data));
     }
+
+    simd_vector& operator-=(const simd_vector& other) {
+        data = _mm_sub_ps(data, other.data);
+        return *this;
+    }
+
+    simd_vector operator-(const simd_vector& other) const {
+        return simd_vector(_mm_sub_ps(data, other.data));
+    }
+
+    simd_vector& operator*=(const simd_vector& other) {
+        data = _mm_mul_ps(data, other.data);
+        return *this;
+    }
+
+    simd_vector operator*(const simd_vector& other) const {
+        return simd_vector(_mm_mul_ps(data, other.data));
+    }
+
+    simd_vector& operator/=(const simd_vector& other) {
+        data = _mm_div_ps(data, other.data);
+        return *this;
+    }
+
+    simd_vector operator/(const simd_vector& other) const {
+        return simd_vector(_mm_div_ps(data, other.data));
+    }
 };
 
-//AVX(8 floats)
+// AVX (8 floats)
 template <>
 struct simd_vector<float, 8> {
-    __m256 data;  //AVX register
+    __m256 data;  // AVX register
 
     simd_vector() : data(_mm256_setzero_ps()) {}
     explicit simd_vector(float value) : data(_mm256_set1_ps(value)) {}
@@ -58,9 +85,36 @@ struct simd_vector<float, 8> {
     simd_vector operator+(const simd_vector& other) const {
         return simd_vector(_mm256_add_ps(data, other.data));
     }
+    
+    simd_vector& operator-=(const simd_vector& other) {
+        data = _mm256_sub_ps(data, other.data);
+        return *this;
+    }
+
+    simd_vector operator-(const simd_vector& other) const {
+        return simd_vector(_mm256_sub_ps(data, other.data));
+    }
+
+    simd_vector& operator*=(const simd_vector& other) {
+        data = _mm256_mul_ps(data, other.data);
+        return *this;
+    }
+
+    simd_vector operator*(const simd_vector& other) const {
+        return simd_vector(_mm256_mul_ps(data, other.data));
+    }
+
+    simd_vector& operator/=(const simd_vector& other) {
+        data = _mm256_div_ps(data, other.data);
+        return *this;
+    }
+
+    simd_vector operator/(const simd_vector& other) const {
+        return simd_vector(_mm256_div_ps(data, other.data));
+    }
 };
 
-//NEON(4 floats, for ARM)
+// NEON (4 floats, for ARM)
 #ifdef __ARM_NEON
 template <>
 struct simd_vector<float, 4> {
@@ -84,28 +138,55 @@ struct simd_vector<float, 4> {
     simd_vector operator+(const simd_vector& other) const {
         return simd_vector(vaddq_f32(data, other.data));
     }
+
+    simd_vector& operator-=(const simd_vector& other) {
+        data = vsubq_f32(data, other.data);
+        return *this;
+    }
+
+    simd_vector operator-(const simd_vector& other) const {
+        return simd_vector(vsubq_f32(data, other.data));
+    }
+
+    simd_vector& operator*=(const simd_vector& other) {
+        data = vmulq_f32(data, other.data);
+        return *this;
+    }
+
+    simd_vector operator*(const simd_vector& other) const {
+        return simd_vector(vmulq_f32(data, other.data));
+    }
+
+    simd_vector& operator/=(const simd_vector& other) {
+        data = vdivq_f32(data, other.data);
+        return *this;
+    }
+
+    simd_vector operator/(const simd_vector& other) const {
+        return simd_vector(vdivq_f32(data, other.data));
+    }
 };
 #endif
 
-//factory function to create a SIMD vector from a scalar value
+// factory function to create a SIMD vector from a scalar value
 template <typename T, size_t N>
 simd_vector<T, N> make_vector(T value) {
     return simd_vector<T, N>(value);
 }
 
-//SSE
+// SSE
 template <>
 inline simd_vector<float, 4> make_vector<float, 4>(float value) {
     return simd_vector<float, 4>(value);
 }
 
-//AVX
+// AVX
 template <>
 inline simd_vector<float, 8> make_vector<float, 8>(float value) {
     return simd_vector<float, 8>(value);
 }
 
-//NEON
+// NEON
 #ifdef __ARM_NEON
 template <>
 inline simd_vector<float, 4> make_vector<float, 4>(float value) {
