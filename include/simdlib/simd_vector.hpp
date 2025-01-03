@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <type_traits>
 #include <immintrin.h>  // SSE, AVX intrinsics
 #ifdef __ARM_NEON
 #include <arm_neon.h>    // NEON intrinsics (on ARM)
@@ -11,9 +12,21 @@ namespace simdlib {
 template <typename T, size_t N>
 struct simd_vector;
 
+template <typename T>
+struct is_supported_type : std::false_type {};
+
+template <>
+struct is_supported_type<float> : std::true_type {};
+
+template <size_t N>
+struct is_power_of_two : std::integral_constant<bool, (N > 0) && ((N & (N - 1)) == 0)> {};
+
 // SSE (4 floats)
 template <>
 struct simd_vector<float, 4> {
+    static_assert(is_supported_type<float>::value, "unsupported type for simd_vector");
+    static_assert(is_power_of_two<4>::value, "size must be a power of 2");
+
     __m128 data;  // SSE register
 
     simd_vector() : data(_mm_setzero_ps()) {}
@@ -66,6 +79,9 @@ struct simd_vector<float, 4> {
 // AVX (8 floats)
 template <>
 struct simd_vector<float, 8> {
+    static_assert(is_supported_type<float>::value, "unsupported type for simd_vector");
+    static_assert(is_power_of_two<8>::value, "size must be a power of 2");
+
     __m256 data;  // AVX register
 
     simd_vector() : data(_mm256_setzero_ps()) {}
@@ -119,6 +135,9 @@ struct simd_vector<float, 8> {
 #ifdef __ARM_NEON
 template <>
 struct simd_vector<float, 4> {
+    static_assert(is_supported_type<float>::value, "unsupported type for simd_vector");
+    static_assert(is_power_of_two<4>::value, "size must be a power of 2");
+
     float32x4_t data;  // NEON register
 
     simd_vector() : data(vdupq_n_f32(0.0f)) {}
@@ -172,6 +191,8 @@ struct simd_vector<float, 4> {
 // factory function to create a SIMD vector from a scalar value
 template <typename T, size_t N>
 constexpr simd_vector<T, N> make_vector(T value) {
+    static_assert(is_supported_type<T>::value, "unsupported type for simd_vector");
+    static_assert(is_power_of_two<N>::value, "size must be a power of 2");
     return simd_vector<T, N>(value);
 }
 
