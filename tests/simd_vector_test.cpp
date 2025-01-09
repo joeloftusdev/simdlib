@@ -201,6 +201,27 @@ TEST(SimdVectorTest, GreaterThanOrEqual)
     }
 }
 
+TEST(SimdVectorTest, HorizontalSum)
+{
+    simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    float result = vec.horizontal_sum();
+    EXPECT_EQ(result, 10.0f);
+}
+
+TEST(SimdVectorTest, HorizontalMax)
+{
+    simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    float result = vec.horizontal_max();
+    EXPECT_EQ(result, 4.0f);
+}
+
+TEST(SimdVectorTest, HorizontalMin)
+{
+    simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    float result = vec.horizontal_min();
+    EXPECT_EQ(result, 1.0f);
+}
+
 } // namespace simdlib
 
 int main(int argc, char **argv)

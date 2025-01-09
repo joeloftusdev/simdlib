@@ -111,4 +111,28 @@ static void BM_SimdVectorGreaterThanOrEqual(benchmark::State &state)
 }
 BENCHMARK(BM_SimdVectorGreaterThanOrEqual);
 
+static void BM_SimdVectorHorizontalSum(benchmark::State& state) {
+    simdlib::simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(vec.horizontal_sum());
+    }
+}
+BENCHMARK(BM_SimdVectorHorizontalSum);
+
+static void BM_SimdVectorHorizontalMax(benchmark::State& state) {
+    simdlib::simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(vec.horizontal_max());
+    }
+}
+BENCHMARK(BM_SimdVectorHorizontalMax);
+
+static void BM_SimdVectorHorizontalMin(benchmark::State& state) {
+    simdlib::simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(vec.horizontal_min());
+    }
+}
+BENCHMARK(BM_SimdVectorHorizontalMin);
+
 BENCHMARK_MAIN();
