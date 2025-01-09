@@ -3,7 +3,8 @@
 #include "include/simdlib/simd_operations.hpp"
 #include "include/simdlib/simd_utils.hpp"
 
-int main() {
+int main()
+{
     simdlib::simd_vector<float, 4> vec1(1.0f);
     simdlib::simd_vector<float, 4> vec2(2.0f);
     auto result = vec1 + vec2;
