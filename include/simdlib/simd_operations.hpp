@@ -107,4 +107,25 @@ simd_vector<T, N> operator>=(const simd_vector<T, N> &lhs, const simd_vector<T, 
     return lhs >= rhs;
 }
 
+// horizontal sum
+template <typename T, size_t N>
+T horizontal_sum(const simd_vector<T, N> &vec)
+{
+    return vec.horizontal_sum();
+}
+
+// horizontal max
+template <typename T, size_t N>
+T horizontal_max(const simd_vector<T, N> &vec)
+{
+    return vec.horizontal_max();
+}
+
+// horizontal min
+template <typename T, size_t N>
+T horizontal_min(const simd_vector<T, N> &vec)
+{
+    return vec.horizontal_min();
+}
+
 } // namespace simdlib
