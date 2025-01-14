@@ -222,6 +222,40 @@ TEST(SimdVectorTest, HorizontalMin)
     EXPECT_EQ(result, 1.0f);
 }
 
+TEST(SimdVectorTest, Shuffle)
+{
+    simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    auto result = vec.shuffle(_MM_SHUFFLE(0, 1, 2, 3));
+
+    EXPECT_EQ(result[0], 4.0f);
+    EXPECT_EQ(result[1], 3.0f);
+    EXPECT_EQ(result[2], 2.0f);
+    EXPECT_EQ(result[3], 1.0f);
+}
+
+TEST(SimdVectorTest, Permute)
+{
+    simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    auto result = vec.permute(_MM_SHUFFLE(2, 3, 0, 1));
+
+    EXPECT_EQ(result[0], 2.0f);
+    EXPECT_EQ(result[1], 1.0f);
+    EXPECT_EQ(result[2], 4.0f);
+    EXPECT_EQ(result[3], 3.0f);
+}
+
+TEST(SimdVectorTest, Blend)
+{
+    simd_vector<float, 4> vec1(1.0f, 2.0f, 3.0f, 4.0f);
+    simd_vector<float, 4> vec2(5.0f, 6.0f, 7.0f, 8.0f);
+    auto result = vec1.blend(vec2, 0b1010);
+
+    EXPECT_EQ(result[0], 1.0f);
+    EXPECT_EQ(result[1], 6.0f);
+    EXPECT_EQ(result[2], 3.0f);
+    EXPECT_EQ(result[3], 8.0f);
+}
+
 } // namespace simdlib
 
 int main(int argc, char **argv)

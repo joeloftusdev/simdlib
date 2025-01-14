@@ -147,6 +147,24 @@ template <> struct simd_vector<float, SSE_SIZE>
         mins = _mm_min_ss(mins, shuf);
         return _mm_cvtss_f32(mins);
     }
+
+    // Shuffle operation
+    simd_vector shuffle(int imm8) const
+    {
+        return simd_vector(_mm_shuffle_ps(data, data, imm8));
+    }
+
+    // Permute operation
+    simd_vector permute(int imm8) const
+    {
+        return simd_vector(_mm_shuffle_ps(data, data, imm8));
+    }
+
+    // Blend operation
+    simd_vector blend(const simd_vector &other, int imm8) const
+    {
+        return simd_vector(_mm_blend_ps(data, other.data, imm8));
+    }
 };
 
 // AVX (8 floats)
@@ -302,6 +320,23 @@ template <> struct simd_vector<float, AVX_SIZE>
         return _mm_cvtss_f32(
             _mm_min_ps(_mm256_castps256_ps128(mins), _mm256_extractf128_ps(mins, 1)));
     }
+    // Shuffle operation
+    simd_vector shuffle(int imm8) const
+    {
+        return simd_vector(_mm256_permute_ps(data, imm8));
+    }
+
+    // Permute operation
+    simd_vector permute(int imm8) const
+    {
+        return simd_vector(_mm256_permute2f128_ps(data, data, imm8));
+    }
+
+    // Blend operation
+    simd_vector blend(const simd_vector &other, int imm8) const
+    {
+        return simd_vector(_mm256_blend_ps(data, other.data, imm8));
+    }
 };
 
 // NEON (4 floats, for ARM)
@@ -439,6 +474,24 @@ template <> struct simd_vector<float, SSE_SIZE>
         float32x2_t min = vpmin_f32(vget_low_f32(data), vget_high_f32(data));
         min = vpmin_f32(min, min);
         return vget_lane_f32(min, 0);
+    }
+
+    // Shuffle operation
+    simd_vector shuffle(uint8x16_t mask) const
+    {
+        return simd_vector(vqtbl1q_f32(data, mask));
+    }
+
+    // Permute operation
+    simd_vector permute(uint8x16_t mask) const
+    {
+        return simd_vector(vqtbl1q_f32(data, mask));
+    }
+
+    // Blend operation
+    simd_vector blend(const simd_vector &other, uint32x4_t mask) const
+    {
+        return simd_vector(vbslq_f32(mask, data, other.data));
     }
 };
 #endif

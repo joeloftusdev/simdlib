@@ -8,7 +8,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_compile_options(-msse3)
+add_compile_options(-msse4.1)
 
 include_directories(include)
 

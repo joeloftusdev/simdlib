@@ -135,4 +135,33 @@ static void BM_SimdVectorHorizontalMin(benchmark::State& state) {
 }
 BENCHMARK(BM_SimdVectorHorizontalMin);
 
+static void BM_SimdVectorShuffle(benchmark::State &state) {
+    simdlib::simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    for (auto _ : state) {
+        auto result = vec.shuffle(_MM_SHUFFLE(0, 1, 2, 3));
+        benchmark::DoNotOptimize(result);
+    }
+}
+BENCHMARK(BM_SimdVectorShuffle);
+
+static void BM_SimdVectorPermute(benchmark::State &state) {
+    simdlib::simd_vector<float, 4> vec(1.0f, 2.0f, 3.0f, 4.0f);
+    for (auto _ : state) {
+        auto result = vec.permute(_MM_SHUFFLE(2, 3, 0, 1));
+        benchmark::DoNotOptimize(result);
+    }
+}
+BENCHMARK(BM_SimdVectorPermute);
+
+static void BM_SimdVectorBlend(benchmark::State &state) {
+    simdlib::simd_vector<float, 4> vec1(1.0f, 2.0f, 3.0f, 4.0f);
+    simdlib::simd_vector<float, 4> vec2(5.0f, 6.0f, 7.0f, 8.0f);
+    for (auto _ : state) {
+        auto result = vec1.blend(vec2, 0b1010);
+        benchmark::DoNotOptimize(result);
+    }
+}
+BENCHMARK(BM_SimdVectorBlend);
+
+
 BENCHMARK_MAIN();
