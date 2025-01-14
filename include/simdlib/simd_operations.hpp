@@ -128,4 +128,26 @@ T horizontal_min(const simd_vector<T, N> &vec)
     return vec.horizontal_min();
 }
 
+// shuffle operation
+template <typename T, size_t N>
+simd_vector<T, N> shuffle(const simd_vector<T, N> &vec, int imm8)
+{
+    return vec.shuffle(imm8);
+}
+
+// permute operation
+template <typename T, size_t N>
+simd_vector<T, N> permute(const simd_vector<T, N> &vec, int imm8)
+{
+    return vec.permute(imm8);
+}
+
+// blend operation
+template <typename T, size_t N>
+simd_vector<T, N> blend(const simd_vector<T, N> &vec1, const simd_vector<T, N> &vec2, int imm8)
+{
+    return vec1.blend(vec2, imm8);
+}
+
+
 } // namespace simdlib
